@@ -1,27 +1,38 @@
 THINGS = ""
-room = ""
+TAKENITEM = False
+
+RITEMNAME = ""
 ROOMNAME = ""
 ZONENAME = ""
 DESCRIPTION = 'description'
 EXAMINATION = 'examine'
 SOLVED = False
+LINK = ""
 Up = "up", "north", "n"
 Down = "down", "south", "s"
 Left = "left", "west", "w"
 Right = "right", "east", "e"
 Door = "d", "door", "enter"
 
+inventory = [
+
+]
+
+
+
 items = {
     "pen": {
-       DESCRIPTION: "a nice pen",
+        "ITEMNAME": "Pen", 
+        DESCRIPTION: "It seems to be a finely pointed fountain pen",
         },
 }
 
 rooms = {
     'b2': {
-        DESCRIPTION: "blah blah blah",
-        THINGS: items["pen"][DESCRIPTION]
-
+        "RITEMNAME": "Pen",
+        "DESCRIPTION": items["pen"][DESCRIPTION] ,
+        "THINGS": items["pen"]["ITEMNAME"],
+        "LINK": items["pen"],
     }
 }
 
@@ -77,8 +88,8 @@ zonemap = {
         Up: "a2",
         Down: "c2",
         Left: "b1",
-        room: rooms["b2"]
-
+        Right: 'b3',
+        TAKENITEM: False,
     },
     'b3': {
         ZONENAME: "",

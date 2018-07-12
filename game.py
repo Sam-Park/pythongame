@@ -20,6 +20,7 @@ class player:
         self.location = 'b2'
         self.game_over = False
         self.job = ""
+        self.inventory = []
 
 newPlayer = player()
 
@@ -66,17 +67,26 @@ def help_menu():
 
 
 ###### Game interactivity ####
+def take(item):
+    inventory.append(item)
+    newPlayer.inventory = inventory
+    print("You take the " + item["ITEMNAME"])
+    rooms[newPlayer.location][TAKENITEM] = True
+
+def print_inv():
+    for ITEMNAME in inventory:
+            print(" \n{0[ITEMNAME]}\n ".format(ITEMNAME))
 
 def print_location():
-    print('\n' + ("#" * (2 * len(zonemap[newPlayer.location][ZONENAME]))))
-    print('# ' + zonemap[newPlayer.location][ZONENAME].upper() + ' #')
-    print('# ' + zonemap[newPlayer.location][DESCRIPTION] + ' #')
-    print('\n' + ("#" * (2 * len(zonemap[newPlayer.location][ZONENAME]))))
+    print('\n' + (("#" * 45).center(45) + "\n"))
+    print('\n ' + zonemap[newPlayer.location][ZONENAME].center(45) + ' \n')
+    print(textwrap.fill(zonemap[newPlayer.location][DESCRIPTION].center(45) + '\n', width=45))
+    print('\n' + (("#" * 45).center(45) + "\n"))
 
 def promt():
-    print("\n" + "======================")
+    print("\n" + ("=" * 45).center(45) )
     action = input(">> ")
-    acceptable_actions = ['n', 's', 'e', 'w', 'quit', 'examine', 'inspect', 'interact', 'look']
+    acceptable_actions = ['n', 's', 'e', 'w', 'quit', 'examine', 'inspect', 'interact', 'look', "l", "inv", "i", "inventory"]
     while action.strip().lower() not in acceptable_actions:
         print('Unknown action, try again.\n' )
         action = input(">> ")
@@ -95,8 +105,10 @@ def promt():
         elif action == "e":
             action = Right
             player_move(action)
-    elif action.strip().lower() in ['examine', 'inspect', 'interact', 'look']:
+    elif action.strip().lower() in ["look", 'examine', 'inspect', 'interact', "l"]:
         player_examine(action.strip().lower())
+    elif action.strip().lower() in ["inv", "i", "inventory"]:
+        print_inv()
 
 def player_move(myAction):
     dest = myAction
@@ -129,11 +141,21 @@ def movement_handler(destination):
     print_location()
 
 def player_examine(action):
-    if zonemap[newPlayer.location][SOLVED]:
-        print("You have already exhausted this zone.")
-    elif zonemap[newPlayer.location][room]: 
-        print(rooms[newPlayer.location][DESCRIPTION])
-        print(rooms[newPlayer.location][THINGS])
+    if rooms[newPlayer.location]["THINGS"]:
+            print("There seems to be something here")
+            check_out = input("Check it out? (y/n) >> ")
+            if check_out.strip().lower() in "y":
+                print(rooms[newPlayer.location]["RITEMNAME"])
+                check_closer = input("Do you take a closer look? (y/n) >>")
+                if check_closer.strip().lower() in "y":
+                    check_item = rooms[newPlayer.location]["DESCRIPTION"]
+                    print(check_item)
+                    check_pickup = input("Pick the " + rooms[newPlayer.location]["RITEMNAME"] + " up? (y/n) >>")
+                    if check_pickup.strip().lower() in "y":
+                        take(rooms[newPlayer.location]["LINK"])
+            elif check_out in "n":
+                check_item = rooms[newPlayer.location]["THINGS"]
+                print("You step away slowly, clearly scared of a " + check_item)      
     else:
         print(zonemap[newPlayer.location][ZONENAME])
         print(zonemap[newPlayer.location][EXAMINATION])
@@ -141,7 +163,7 @@ def player_examine(action):
    
 
 
-##### Game functionality #########
+###k## Game functionality ####s#####
 
 
 
@@ -154,7 +176,7 @@ def main_game_loop():
 def setup_game():
     os.system('clear')
 
-    #### Name Collecting
+    ##r## Name Collecting
 #    question1 = "Hello, what's your name?\n"
 #    for character in question1:
 #        sys.stdout.write(character)
@@ -163,7 +185,7 @@ def setup_game():
 #    player_name = input(">> ")
 #    newPlayer.name = player_name
 #    
-#    ##### Job Handling ####
+#    ##### Job Handling ##a##
 #    question2 = "What, class are you?\n"
 #    question2added = "(You can play as a warrior, priest or a mage)\n"
 #    for character in question2:
@@ -185,7 +207,7 @@ def setup_game():
 #            newPlayer.job = player_job
 #            print("You are now a " + player_job + " !\n")
 
-    ##### player stats ######
+    ###a## player stats ####m##
  #   if newPlayer.job is 'warrior':
  #       self.hp = 120
  #       self.mana = 30
@@ -196,7 +218,7 @@ def setup_game():
  #       self.hp = 105
  #       self.mana = 50
 
-#### INTRODUCTION #########
+##p## INTRODUCTION #########
 #    question3 = "Welcome, " + newPlayer.name + " the " + newPlayer.job +".\n"
 #    for character in question3:
 #        sys.stdout.write(character)
