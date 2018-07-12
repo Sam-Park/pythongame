@@ -1,6 +1,6 @@
 # Python Text RPG
 # Made by Sam Park
-
+from gameObjects import *
 import cmd
 import textwrap
 import sys
@@ -61,109 +61,9 @@ def help_menu():
     print("# Use l or look to inpsect  #")
     title_screen_selections()
 
-##### game functionality ####
 
 
 
-
-
-ZONENAME = ""
-DESCRIPTION = 'description'
-EXAMINATION = 'examine'
-SOLVED = False
-Up = "up", "north", "n"
-Down = "down", "south", "s"
-Left = "left", "east", "e"
-Right = "right", "west", "w"
-
-solved_places = {'a1': False, 'a2': False, 'a3': False, 'a4': False,
-                'b1': False, 'b2': False, 'b3': False, 'b4': False,
-                'c1': False, 'c2': False, 'c3': False, 'c4': False,
-                'd1': False, 'd2': False, 'd3': False, 'd4': False,
-                }
-
-zonemap = {
-    'a1': {
-        ZONENAME: "Town Market",
-        DESCRIPTION: 'description',
-        EXAMINATION: 'examine',
-        SOLVED: False,
-        Up: "",
-        Down: "b1",
-        Left: "",
-        Right: "a2",
-    },
-    'a2': {
-        ZONENAME: "Town Entrance",
-        DESCRIPTION:'description',
-        EXAMINATION: 'examine',
-        SOLVED: False,
-        Up: "",
-        Down: "b2",
-        Left: "a1",
-        Right: "a3",
-    },
-    'a3': {
-        ZONENAME: "Town Square",
-        DESCRIPTION: 'description',
-        EXAMINATION: 'examine',
-        SOLVED: False,
-        Up: "",
-        Down: "b3",
-        Left: "a2",
-        Right: "a4",
-    },
-    'a4': {
-        ZONENAME: "Town Hall",
-        DESCRIPTION: 'description',
-        EXAMINATION: 'examine',
-        SOLVED: False,
-        Up: "",
-        Down: "b4",
-        Left: "a3",
-        Right: "",
-    },
-    'b1': {
-        ZONENAME: "",
-        DESCRIPTION: 'description',
-        EXAMINATION: 'examine',
-        SOLVED: False,
-        Up: "a1",
-        Down: "c1",
-        Left: "",
-        Right: "b2",
-    },
-    'b2': {
-        ZONENAME: "Home",
-        DESCRIPTION: 'This is your Home!',
-        EXAMINATION: "It hasn't changed since the last time you looked...",
-        SOLVED: False,
-        Up: "a2",
-        Down: "c2",
-        Left: "b1",
-        Right: "b3",
-    },
-    'b3': {
-        ZONENAME: "",
-        DESCRIPTION: 'description',
-        EXAMINATION: 'examine',
-        SOLVED: False,
-        Up: "a3",
-        Down: "c3",
-        Left: "b2",
-        Right:"b4",
-    },
-    'b4': {
-        ZONENAME: "",
-        DESCRIPTION: 'description',
-        EXAMINATION: 'examine',
-        SOLVED: False,
-        Up: "a4",
-        Down: "c4",
-        Left: "b3",
-        Right: "",
-    },
-}
 
 ###### Game interactivity ####
 
@@ -183,7 +83,18 @@ def promt():
     if action.strip().lower() == 'quit':
         sys.exit()
     elif action.strip().lower() in ['n', 's', 'e', 'w', ]:
-        player_move(action.strip().lower())
+        if action == "n":
+            action = Up
+            player_move(action)
+        elif action == "s":
+            action = Down
+            player_move(action)
+        elif action == "w":
+            action = Left
+            player_move(action)
+        elif action == "e":
+            action = Right
+            player_move(action)
     elif action.strip().lower() in ['examine', 'inspect', 'interact', 'look']:
         player_examine(action.strip().lower())
 
@@ -191,18 +102,26 @@ def player_move(myAction):
     dest = myAction
     if dest not in zonemap[newPlayer.location]:
         print("You bump into the wall, try another exit")
-    elif dest in ["n", "north"]:
-        destination = zonemap[newPlayer.location][Up]
-        movement_handler(destination)
-    elif dest in ["s", "south"]:
-        destination = zonemap[newPlayer.location][Down]
-        movement_handler(destination)
-    elif dest in ["e", "east"]:
-        destination = zonemap[newPlayer.location][Left]
-        movement_handler(destination)
-    elif dest in ["w", "west"]:
-        destination = zonemap[newPlayer.location][Right]
-        movement_handler(destination)
+    elif dest == Up:
+        dest = 'n'
+        if dest in ["n"]:
+            destination = zonemap[newPlayer.location][Up]
+            movement_handler(destination)
+    elif dest == Down:
+        dest = "s"
+        if dest in ["s"]:
+            destination = zonemap[newPlayer.location][Down]
+            movement_handler(destination)
+    elif dest == Right:
+        dest = "e"
+        if dest in ["e"]:
+            destination = zonemap[newPlayer.location][Right]
+            movement_handler(destination)
+    elif dest == Left:
+        dest = "w"
+        if dest in ["w"]:
+            destination = zonemap[newPlayer.location][Left]
+            movement_handler(destination)
 
 def movement_handler(destination):
     print("\n" + "You have moved to " + destination + ".")
@@ -212,8 +131,14 @@ def movement_handler(destination):
 def player_examine(action):
     if zonemap[newPlayer.location][SOLVED]:
         print("You have already exhausted this zone.")
+    elif zonemap[newPlayer.location][room]: 
+        print(rooms[newPlayer.location][DESCRIPTION])
+        print(rooms[newPlayer.location][THINGS])
     else:
-        print_location()
+        print(zonemap[newPlayer.location][ZONENAME])
+        print(zonemap[newPlayer.location][EXAMINATION])
+
+   
 
 
 ##### Game functionality #########
